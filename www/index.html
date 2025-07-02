@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Регистрация</title>
+  <link rel="stylesheet" href="index.css">
+
+</head>
+
+<body>
+<form id="registerForm" method="post">
+
+  <div class="container">
+    <h1>Register</h1>
+<p>Please fill in this form to create an account.</p>
+      <hr>
+
+<label for="name"><b>Name</b></label>
+<input type="text" 
+    placeholder="Enter Name" name="name"
+id="name" required>
+
+<label for="email"><b>Email</b></label>
+<input type="text" placeholder="Enter Email" 
+name="email"
+ id="email" required>
+
+
+      <label for="password"><b>Password</b></label>
+<input type="password" placeholder="Enter Password" 
+    name="password"
+id="password" required>
+
+
+<label for="confirmPassword"><b>Repeat Password</b></label>
+<input
+ type="password"
+  placeholder="Repeat Password" 
+name="confirmPassword"
+id="confirmPassword" required>
+
+
+
+<label><b>CAPTCHA</b></label>
+<p id="captchaQuestion"></p>
+
+<input type="text"
+id="captchaAnswer" placeholder="Отговор"
+ required>
+
+      <hr>
+<p>By creating an account you agree to our 
+<a href="#">Terms &amp; Privacy</a>.</p>
+
+
+<button type="submit"
+class="registerbtn">
+Register</button>
+  </div>
+
+<div class="container signin">
+<p>Already have an account?
+ <a href="login.html">Login here</a>.</p>
+</div>
+
+</form>
+
+<div id="popupPass" class="popup"></div>
+
+<div
+ id="popupError" class="popup"></div>
+
+<p id="error"
+style="color:red;"></p>
+
+
+
+<script>
+let a = Math.floor(Math.random() * 4) + 1;
+let b = Math.floor(Math.random() * 4) + 1;
+
+document.getElementById("captchaQuestion").textContent =
+`Колко е ${a} + ${b}?`;
+
+document
+.getElementById("registerForm")
+.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+const name = document.getElementById("name").value.trim();
+const email = document.getElementById("email").value.trim();
+
+const pass = document.getElementById("password").value.trim();
+const confirm = document.getElementById("confirmPassword").value.trim();
+
+const captcha = document.getElementById("captchaAnswer").value.trim();
+const error = document.getElementById("error");
+
+error.textContent = "";
+clearErrorBorders();
+
+
+if (name.length < 2) {
+  showPopup("popupError", "Името е твърде кратко.");
+  error.textContent = "Името е твърде кратко.";
+  setErrorBorder("name"); return;
+}
+
+
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  showPopup("popupError", "Невалиден имейл.");
+  setErrorBorder("email");
+  error.textContent = "Невалиден имейл."; return;
+}
+
+
+if (pass.length < 6) {
+  showPopup("popupError", "Паролата трябва да е поне 6 символа.");
+  setErrorBorder("password");
+  error.textContent = "Паролата трябва да е поне 6 символа."; return;
+}
+
+
+if (pass !== confirm) {
+  showPopup("popupError", "Паролите не съвпадат.");
+  error.textContent = "Паролите не съвпадат.";
+  setErrorBorder("confirmPassword");
+  return;
+}
+
+
+if (parseInt(captcha) !== (a + b)) {
+  showPopup("popupError", "Грешна CAPTCHA.");
+  error.textContent = "Грешна CAPTCHA.";
+  setErrorBorder("captchaAnswer"); return;
+}
+
+
+fetch("/register", {
+  method: "POST",
+headers: {
+"Content-Type": "application/x-www-form-urlencoded"
+},
+body: `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`
+})
+.then(res => res.text())
+.then(result => {
+  if (result.toLowerCase().includes("успешна")) {
+    showPopup("popupPass", "Успешна регистрация!");
+    document.getElementById("registerForm").reset();
+
+a = Math.floor(Math.random() * 4) + 1;
+b = Math.floor(Math.random() * 4) + 1;
+
+document.getElementById("captchaQuestion").textContent =
+  `Колко е ${a} + ${b}?`;
+  } else {
+    error.textContent = result;
+    if (result.toLowerCase().includes("имейлът вече съществува")) {
+      setErrorBorder("email");
+      showPopup("popupError", "Имейлът вече съществува.");
+    }
+  }
+})
+.catch(() => {
+  showPopup("popupError", "Възникна грешка при връзка със сървъра.");
+  error.textContent = "Възникна грешка при връзка със сървъра.";
+});
+});
+
+
+function showPopup(id, message) {
+  const popup = document.getElementById(id);
+  popup.textContent = message;
+  popup.classList.add("show");
+
+setTimeout(() => {
+  popup.classList.remove("show");
+}, 3000);
+}
+
+
+function setErrorBorder(id) {
+document.getElementById(id).style.borderColor = "red";
+}
+
+
+function clearErrorBorders() {
+["name", "email", "password", "confirmPassword", "captchaAnswer"]
+.forEach(id => {
+document.getElementById(id).style.borderColor = "";
+});
+}
+
+</script>
+</body>
+</html>
