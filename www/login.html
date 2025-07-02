@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <title>Login</title>
+
+<link rel="stylesheet"
+ href="index.css">
+</head>
+
+
+<body>
+<form id="loginForm" method="post">
+<div class="container">
+<h1>Login</h1>
+<p>Enter your credentials to sign in.</p>
+
+  <hr>
+
+<label for="email"><b>Email</b></label>
+<input type="text" 
+ placeholder="Enter Email"
+ name="email" id="email" required>
+
+<label for="password"><b>Password</b></label>
+<input type="password"
+placeholder="Enter Password" name="password" id="password" required>
+
+<label><b>CAPTCHA</b></label>
+<p id="captchaQuestion"></p>
+<input type="text"
+id="captchaAnswer" placeholder="Answer" required>
+
+<hr>
+
+<button type="submit" class="registerbtn">
+Login</button>
+
+</div>
+<div class="container signin">
+<p>
+Don't have an account? 
+<a href="index.html">Register here</a>.</p>
+</div>
+</form>
+
+
+<div id="popupPass" class="popup"></div>
+
+<div
+id="popupError" class="popup"></div>
+
+
+<p id="error" style="color:red;"></p>
+
+<script>
+let a = Math.floor(Math.random() * 4) + 1;
+let b = Math.floor(Math.random() * 4) + 1;
+
+document.getElementById("captchaQuestion").textContent = 
+`What is ${a} + ${b}?`;
+
+document.getElementById("loginForm")
+.addEventListener("submit", function(e) {
+e.preventDefault();
+
+const email = document.getElementById("email").value.trim();
+const password = document.getElementById("password").value.trim();
+
+const captcha = document.getElementById("captchaAnswer").value.trim();
+const error = document.getElementById("error");
+
+error.textContent = "";
+
+["email", "password", "captchaAnswer"]
+.forEach(id => 
+document.getElementById(id).style.borderColor = "");
+
+if (parseInt(captcha) !== (a + b)) {
+document.getElementById("captchaAnswer").style.borderColor = "red";
+showPopup("popupError", "Wrong CAPTCHA answer.");
+return;
+}
+
+fetch("/login", {
+  method: "POST",
+headers: {
+"Content-Type": "application/x-www-form-urlencoded"
+},
+body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+})
+.then(res => res.text())
+.then(result => {
+if (result.toLowerCase().includes("успешен")) {
+
+window.location.href = "welcome.html"; // или друга твоя целева страница
+} else {
+
+showPopup("popupError", result);
+}
+})
+.catch(() => {
+showPopup("popupError", "Error connecting to server.");
+});
+});
+
+
+function showPopup(id, message) {
+const popup = document.getElementById(id);
+popup.textContent = message;
+popup.classList.add("show");
+
+setTimeout(() =>
+popup.classList.remove("show"), 3000);
+}
+
+</script>
+
+</body>
+</html>

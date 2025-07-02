@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+  <form id="loginForm" method="post">
+    <div class="container">
+      <h1>Welcome</h1>
+      <p>Here you can alter your credentials</p>
+      <hr>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" id="email">
+
+      <label for="password"><b>New Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" id="password">
+
+      <label for="password"><b>Repeat New Password</b></label>
+      <input type="password" placeholder="Enter Password" name="confirmPassword" id="password">
+
+
+      <hr>
+      <button id="submitBtn" type="submit" class="registerbtn">Submit</button>
+<button id="logoutBtn" type="button" class="registerbtn">Log Out</button>
+    </div>
+     
+  </form>
+  <script>
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();  
+
+    window.location.href = "login.html";
+  });
+</script>
+
+</body>

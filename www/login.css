@@ -1,0 +1,112 @@
+/* Общи настройки за box model */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Контейнер с центриране и фон */
+.container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Полета за вход */
+input[type="text"], input[type="password"], input[type="email"] {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  background-color: #eef6ff;
+  border-color: #0077ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.2);
+}
+
+/* Хоризонтална линия */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 24px 0;
+}
+
+/* Бутон за вход */
+.registerbtn {
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: white;
+  padding: 14px 0;
+  margin-top: 8px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  transition: 0.3s ease, transform 0.2s;
+}
+
+.registerbtn:hover {
+  background: linear-gradient(135deg, #64dd17, #00c853);
+  transform: scale(1.02);
+}
+
+/* Линкове */
+a {
+  color: #116cff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #003380;
+  text-decoration: underline;
+}
+
+/* Секция за вече регистрирани */
+.signin {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Popup съобщения */
+.popup {
+  visibility: hidden;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 1000;
+  font-weight: bold;
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+#popupPass {
+  background-color: #4CAF50;
+}
+
+#popupError {
+  background-color: #e53935;
+}
+
+.popup.show {
+  visibility: visible;
+  opacity: 1;
+}
